@@ -1,17 +1,17 @@
 [gd_scene load_steps=3 format=3 uid="uid://b0ojosu6hjafr"]
 
-[ext_resource type="PackedScene" uid="uid://bi3qogeq6wk3b" path="res://Player.tscn" id="1_6y0p6"]
-[ext_resource type="PackedScene" uid="uid://btpuhs0h8u6uc" path="res://Main_Level_Scene.tscn" id="1_f5bq0"]
+[ext_resource type="PackedScene" uid="uid://btpuhs0h8u6uc" path="res://scenes/main_level_scene.tscn" id="1_gpdav"]
+[ext_resource type="PackedScene" uid="uid://bi3qogeq6wk3b" path="res://scenes/player.tscn" id="2_hnyvx"]
 
-[node name="Node3D" type="Node3D"]
+[node name="World" type="Node3D"]
 
 [node name="Level" type="Node3D" parent="."]
 
-[node name="StaticBody3D" parent="Level" instance=ExtResource("1_f5bq0")]
+[node name="Ground" parent="Level" instance=ExtResource("1_gpdav")]
 
 [node name="Players" type="Node" parent="."]
 
-[node name="CharacterBody3D" parent="Players" instance=ExtResource("1_6y0p6")]
+[node name="Player" parent="Players" instance=ExtResource("2_hnyvx")]
 
 [node name="ReticleLayer" type="CanvasLayer" parent="."]
 

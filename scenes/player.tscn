@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bi3qogeq6wk3b"]
 
-[ext_resource type="Script" path="res://CharacterBody3D.cs" id="1_ls2el"]
-[ext_resource type="Script" path="res://gun.cs" id="2_c0maj"]
+[ext_resource type="Script" path="res://Scripts/Player.cs" id="1_jfm2n"]
+[ext_resource type="Script" path="res://Scripts/Gun.cs" id="2_gw3b5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xyfl0"]
 
@@ -11,8 +11,8 @@
 radius = 0.05
 height = 1.25
 
-[node name="CharacterBody3D" type="CharacterBody3D"]
-script = ExtResource("1_ls2el")
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_jfm2n")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -29,7 +29,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 [node name="GunHolder" type="Node3D" parent="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358638, -0.304876, -0.495182)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/GunHolder"]
+[node name="Gun" type="MeshInstance3D" parent="Camera3D/GunHolder"]
 transform = Transform3D(0.966754, 0.224641, -0.122161, -0.0707086, -0.224259, -0.971961, -0.245738, 0.948285, -0.200919, -0.0517016, -0.00112605, 0.369614)
 mesh = SubResource("CapsuleMesh_387qw")
-script = ExtResource("2_c0maj")
+script = ExtResource("2_gw3b5")
+
+[node name="Muzzle" type="Marker3D" parent="Camera3D/GunHolder/Gun"]
+transform = Transform3D(0.999998, -2.98023e-08, -7.45058e-09, 8.9407e-08, 0.999998, 2.98023e-08, 1.11759e-08, -1.49012e-08, 0.999998, 0.00363982, -0.662342, 0.00246787)
