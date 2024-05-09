@@ -16,7 +16,6 @@ public partial class Gun : MeshInstance3D
 
 	public void Shoot()
 	{
-		GD.Print("Shoot");
 		var bullet = _bulletScene.Instantiate<RigidBody3D>();
 		bullet.Transform = _muzzle.GlobalTransform;
 		bullet.LinearVelocity = -_muzzle.GlobalBasis.Y * ProjectileVelocityMultiplier;
