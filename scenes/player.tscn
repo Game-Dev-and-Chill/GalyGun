@@ -1,7 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://bi3qogeq6wk3b"]
+[gd_scene load_steps=9 format=3 uid="uid://bi3qogeq6wk3b"]
 
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="1_jfm2n"]
 [ext_resource type="Script" path="res://Scripts/Gun.cs" id="2_gw3b5"]
+[ext_resource type="Texture2D" uid="uid://def2s467ausjr" path="res://textures/PolygonBattleRoyale_Texture_02_A.png" id="3_g14oy"]
+[ext_resource type="ArrayMesh" uid="uid://hcu8jw0el1j6" path="res://models/SM_Wep_Rifle_Assault_03.obj" id="3_wmflq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xyfl0"]
 
@@ -10,6 +12,9 @@
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_387qw"]
 radius = 0.05
 height = 1.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8b7s8"]
+albedo_texture = ExtResource("3_g14oy")
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_jfm2n")
@@ -31,8 +36,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358638, -0.304876, -0.49518
 
 [node name="Gun" type="MeshInstance3D" parent="Camera3D/GunHolder"]
 transform = Transform3D(0.966754, 0.224641, -0.122161, -0.0707086, -0.224259, -0.971961, -0.245738, 0.948285, -0.200919, -0.0517016, -0.00112605, 0.369614)
+visible = false
 mesh = SubResource("CapsuleMesh_387qw")
 script = ExtResource("2_gw3b5")
 
 [node name="Muzzle" type="Marker3D" parent="Camera3D/GunHolder/Gun"]
-transform = Transform3D(0.999998, -2.98023e-08, -7.45058e-09, 8.9407e-08, 0.999998, 2.98023e-08, 1.11759e-08, -1.49012e-08, 0.999998, 0.00363982, -0.662342, 0.00246787)
+transform = Transform3D(0.999998, -8.9407e-08, -1.86265e-08, 1.04308e-07, 0.999998, 1.49012e-08, 7.45058e-09, -1.49012e-08, 0.999998, 0.00363982, -0.662342, 0.00246799)
+
+[node name="Gun2" type="MeshInstance3D" parent="Camera3D/GunHolder"]
+transform = Transform3D(-0.00966754, 0.00122161, -0.00224641, 0.000707086, 0.00971961, 0.00224259, 0.00245738, 0.00200919, -0.00948285, -0.0245585, -0.106741, 0.487481)
+material_override = SubResource("StandardMaterial3D_8b7s8")
+mesh = ExtResource("3_wmflq")
