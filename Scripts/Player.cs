@@ -11,11 +11,13 @@ public partial class Player : Godot.CharacterBody3D
 	private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private Camera3D _camera;
 	private Gun _gun;
+	private CollisionShape3D _collisionShape;
 
 	public override void _Ready()
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
 		_gun = FindChild("Gun") as Gun;
+		_collisionShape = GetNode<CollisionShape3D>("CollisionShape3D");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
@@ -30,7 +32,7 @@ public partial class Player : Godot.CharacterBody3D
 		if (Input.IsActionJustPressed("jump") && IsOnFloor())
 			velocity.Y = JumpVelocity;
 
-		var inputDir = Input.GetVector("Move_Left", "Move_Right", "Move_Forward", "Move_Back");
+		var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
 		var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero)
 		{
@@ -42,6 +44,9 @@ public partial class Player : Godot.CharacterBody3D
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
 			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
 		}
+
+		var collisionCapsule = _collisionShape.Shape as CapsuleShape3D;
+		collisionCapsule!.Height = Input.IsActionPressed("crouch") ? 1.2f : 2.0f; 
 
 		Velocity = velocity;
 		MoveAndSlide();

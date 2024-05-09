@@ -1,13 +1,57 @@
-[gd_scene load_steps=3 format=3 uid="uid://b0ojosu6hjafr"]
+[gd_scene load_steps=8 format=3 uid="uid://b0ojosu6hjafr"]
 
 [ext_resource type="PackedScene" uid="uid://btpuhs0h8u6uc" path="res://scenes/main_level_scene.tscn" id="1_gpdav"]
 [ext_resource type="PackedScene" uid="uid://bi3qogeq6wk3b" path="res://scenes/player.tscn" id="2_hnyvx"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nhbmi"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_0a6i7"]
+sky_material = SubResource("ProceduralSkyMaterial_nhbmi")
+
+[sub_resource type="Environment" id="Environment_uex27"]
+background_mode = 2
+sky = SubResource("Sky_0a6i7")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_4a6o5"]
+size = Vector3(4, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_injt3"]
+size = Vector3(4, 1, 1)
+
 [node name="World" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_uex27")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
 
 [node name="Level" type="Node3D" parent="."]
 
 [node name="Ground" parent="Level" instance=ExtResource("1_gpdav")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -10.8868)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/StaticBody3D"]
+mesh = SubResource("BoxMesh_4a6o5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level/StaticBody3D"]
+shape = SubResource("BoxShape3D_injt3")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -6.88678)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/StaticBody3D2"]
+mesh = SubResource("BoxMesh_4a6o5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level/StaticBody3D2"]
+shape = SubResource("BoxShape3D_injt3")
 
 [node name="Players" type="Node" parent="."]
 
