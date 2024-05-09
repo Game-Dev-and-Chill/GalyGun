@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://bi3qogeq6wk3b"]
+
+[ext_resource type="Script" path="res://CharacterBody3D.cs" id="1_ls2el"]
+[ext_resource type="Script" path="res://gun.cs" id="2_c0maj"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xyfl0"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_utawk"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_387qw"]
+radius = 0.05
+height = 1.25
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_ls2el")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_xyfl0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+mesh = SubResource("CapsuleMesh_utawk")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="GunHolder" type="Node3D" parent="Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.358638, -0.304876, -0.495182)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera3D/GunHolder"]
+transform = Transform3D(0.966754, 0.224641, -0.122161, -0.0707086, -0.224259, -0.971961, -0.245738, 0.948285, -0.200919, -0.0517016, -0.00112605, 0.369614)
+mesh = SubResource("CapsuleMesh_387qw")
+script = ExtResource("2_c0maj")

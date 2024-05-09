@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0ojosu6hjafr"]
+
+[ext_resource type="PackedScene" uid="uid://bi3qogeq6wk3b" path="res://Player.tscn" id="1_6y0p6"]
+[ext_resource type="PackedScene" uid="uid://btpuhs0h8u6uc" path="res://Main_Level_Scene.tscn" id="1_f5bq0"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Level" type="Node3D" parent="."]
+
+[node name="StaticBody3D" parent="Level" instance=ExtResource("1_f5bq0")]
+
+[node name="Players" type="Node" parent="."]
+
+[node name="CharacterBody3D" parent="Players" instance=ExtResource("1_6y0p6")]
+
+[node name="ReticleLayer" type="CanvasLayer" parent="."]
+
+[node name="CenterContainer" type="CenterContainer" parent="ReticleLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Line2D" type="Line2D" parent="ReticleLayer/CenterContainer"]
+position = Vector2(582, 324)
+points = PackedVector2Array(10, 0, 0, 0)
+width = 2.0
+
+[node name="Line2D2" type="Line2D" parent="ReticleLayer/CenterContainer"]
+position = Vector2(570, 324)
+rotation = 3.14159
+points = PackedVector2Array(10, 0, 0, 0)
+width = 2.0
+
+[node name="Line2D3" type="Line2D" parent="ReticleLayer/CenterContainer"]
+position = Vector2(576, 330)
+rotation = 1.5708
+points = PackedVector2Array(10, 0, 0, 0)
+width = 2.0
+
+[node name="Line2D4" type="Line2D" parent="ReticleLayer/CenterContainer"]
+position = Vector2(576, 318)
+rotation = -1.5708
+points = PackedVector2Array(10, 0, 0, 0)
+width = 2.0

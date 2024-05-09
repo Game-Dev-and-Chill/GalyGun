@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://btpuhs0h8u6uc"]
+
+[ext_resource type="Texture2D" uid="uid://527qu8juogep" path="res://icon.svg" id="1_codp2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o75bi"]
+albedo_texture = ExtResource("1_codp2")
+uv1_scale = Vector3(20, 20, 20)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_buoum"]
+material = SubResource("StandardMaterial3D_o75bi")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_wehc5"]
+data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
+
+[node name="StaticBody3D" type="StaticBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+mesh = SubResource("PlaneMesh_buoum")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
+shape = SubResource("ConcavePolygonShape3D_wehc5")
