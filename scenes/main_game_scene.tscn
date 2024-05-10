@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://b0ojosu6hjafr"]
+[gd_scene load_steps=9 format=3 uid="uid://b0ojosu6hjafr"]
 
 [ext_resource type="PackedScene" uid="uid://btpuhs0h8u6uc" path="res://scenes/main_level_scene.tscn" id="1_gpdav"]
 [ext_resource type="PackedScene" uid="uid://bi3qogeq6wk3b" path="res://scenes/player.tscn" id="2_hnyvx"]
+[ext_resource type="Script" path="res://Scripts/Reticle.cs" id="3_vkwmb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nhbmi"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -72,32 +73,35 @@ shape = SubResource("BoxShape3D_injt3")
 
 [node name="ReticleLayer" type="CanvasLayer" parent="."]
 
-[node name="CenterContainer" type="CenterContainer" parent="ReticleLayer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="Reticle" type="CenterContainer" parent="ReticleLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("3_vkwmb")
 
-[node name="Line2D" type="Line2D" parent="ReticleLayer/CenterContainer"]
-position = Vector2(582, 324)
+[node name="Right" type="Line2D" parent="ReticleLayer/Reticle"]
+position = Vector2(6, 0)
 points = PackedVector2Array(10, 0, 0, 0)
 width = 2.0
 
-[node name="Line2D2" type="Line2D" parent="ReticleLayer/CenterContainer"]
-position = Vector2(570, 324)
+[node name="Left" type="Line2D" parent="ReticleLayer/Reticle"]
+position = Vector2(-6, 0)
 rotation = 3.14159
 points = PackedVector2Array(10, 0, 0, 0)
 width = 2.0
 
-[node name="Line2D3" type="Line2D" parent="ReticleLayer/CenterContainer"]
-position = Vector2(576, 330)
+[node name="Bottom" type="Line2D" parent="ReticleLayer/Reticle"]
+position = Vector2(0, 6)
 rotation = 1.5708
 points = PackedVector2Array(10, 0, 0, 0)
 width = 2.0
 
-[node name="Line2D4" type="Line2D" parent="ReticleLayer/CenterContainer"]
-position = Vector2(576, 318)
+[node name="Top" type="Line2D" parent="ReticleLayer/Reticle"]
+position = Vector2(0, -6)
 rotation = -1.5708
 points = PackedVector2Array(10, 0, 0, 0)
 width = 2.0
