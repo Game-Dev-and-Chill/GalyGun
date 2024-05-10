@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bi3qogeq6wk3b"]
+[gd_scene load_steps=12 format=3 uid="uid://bi3qogeq6wk3b"]
 
 [ext_resource type="Script" path="res://Scripts/Player.cs" id="1_jfm2n"]
 [ext_resource type="Script" path="res://Scripts/Gun.cs" id="2_gw3b5"]
@@ -15,6 +15,40 @@ height = 1.25
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8b7s8"]
 albedo_texture = ExtResource("3_g14oy")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_eg638"]
+
+[sub_resource type="Animation" id="Animation_2fioa"]
+resource_name = "crouch"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CollisionShape3D:shape:height")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [2.0, 1.2]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 1.5, 0), Vector3(0, 1.1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_miv4d"]
+_data = {
+"crouch": SubResource("Animation_2fioa")
+}
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_jfm2n")
@@ -47,3 +81,13 @@ transform = Transform3D(0.999998, -8.9407e-08, -1.86265e-08, 1.04308e-07, 0.9999
 transform = Transform3D(-0.00966754, 0.00122161, -0.00224641, 0.000707086, 0.00971961, 0.00224259, 0.00245738, 0.00200919, -0.00948285, -0.0245585, -0.106741, 0.487481)
 material_override = SubResource("StandardMaterial3D_8b7s8")
 mesh = ExtResource("3_wmflq")
+
+[node name="UncrouchCheck" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0)
+shape = SubResource("SphereShape3D_eg638")
+target_position = Vector3(0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_miv4d")
+}

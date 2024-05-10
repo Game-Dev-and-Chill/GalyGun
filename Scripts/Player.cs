@@ -15,13 +15,19 @@ public partial class Player : Godot.CharacterBody3D
 	private float _linearDamping = ProjectSettings.GetSetting("physics/3d/default_linear_damp").AsSingle();
 	private Camera3D _camera;
 	private Gun _gun;
-	private CollisionShape3D _collisionShape;
+	// private CollisionShape3D _collisionShape;
+	private ShapeCast3D _uncrouchCheck;
+	private AnimationPlayer _animationPlayer;
+
+	private bool _crouching;
 
 	public override void _Ready()
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
 		_gun = FindChild("Gun") as Gun;
-		_collisionShape = GetNode<CollisionShape3D>("CollisionShape3D");
+		// _collisionShape = GetNode<CollisionShape3D>("CollisionShape3D");
+		_uncrouchCheck = GetNode<ShapeCast3D>("UncrouchCheck");
+		_animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
@@ -29,13 +35,33 @@ public partial class Player : Godot.CharacterBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		var velocity = Velocity;
-		var crouching = Input.IsActionPressed("crouch");
-		var running = Input.IsActionPressed("run") && !crouching;
+		var crouch = Input.IsActionPressed("crouch");
+		var running = Input.IsActionPressed("run") && !_crouching;
 
+		// var collisionCapsule = _collisionShape.Shape as CapsuleShape3D;
+		// collisionCapsule!.Height = Input.IsActionPressed("crouch") ? 1.2f : 2.0f;
+		if (crouch != _crouching)
+		{
+			if (crouch)
+			{
+				_animationPlayer.Play("crouch", -1, 5f, false);
+				_crouching = true;
+			}
+			else
+			{
+				if (!_uncrouchCheck.IsColliding())
+				{
+					_animationPlayer.Play("crouch", -1, -5f, true);
+					_crouching = false;
+				}
+			}
+		}
+
+		
 		if (!IsOnFloor())
 			velocity.Y -= _gravity * (float)delta;
 
-		if (Input.IsActionJustPressed("jump") && IsOnFloor() && !crouching)
+		if (Input.IsActionJustPressed("jump") && IsOnFloor() && !_crouching)
 			velocity.Y = JumpVelocity;
 
 		if (IsOnFloor())
@@ -44,7 +70,7 @@ public partial class Player : Godot.CharacterBody3D
 			var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 			if (direction != Vector3.Zero)
 			{
-				var speed = crouching ? CrouchSpeed : running ? RunSpeed : WalkSpeed;
+				var speed = _crouching ? CrouchSpeed : running ? RunSpeed : WalkSpeed;
 				velocity.X = direction.X * speed;
 				velocity.Z = direction.Z * speed;
 			}
@@ -67,9 +93,6 @@ public partial class Player : Godot.CharacterBody3D
 				velocity.Z = direction.Z;
 			}
 		}
-
-		var collisionCapsule = _collisionShape.Shape as CapsuleShape3D;
-		collisionCapsule!.Height = Input.IsActionPressed("crouch") ? 1.2f : 2.0f;
 
 		var linearDampingTimesDeltaSeconds = _linearDamping * (float)delta;
 		var linearVelocityMultiplier = new Vector3(
