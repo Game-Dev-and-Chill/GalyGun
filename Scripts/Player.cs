@@ -14,6 +14,7 @@ public partial class Player : Godot.CharacterBody3D
 	private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private float _linearDamping = ProjectSettings.GetSetting("physics/3d/default_linear_damp").AsSingle();
 	private Camera3D _camera;
+	private Node3D _gunHolder;
 	private Gun _gun;
 	private ShapeCast3D _uncrouchCheck;
 	private AnimationPlayer _animationPlayer;
@@ -23,7 +24,8 @@ public partial class Player : Godot.CharacterBody3D
 	public override void _Ready()
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
-		_gun = FindChild("Gun") as Gun;
+		_gunHolder = FindChild("GunHolder") as Node3D;
+		_gun = _gunHolder!.GetNode<Gun>("Gun");
 		_uncrouchCheck = GetNode<ShapeCast3D>("UncrouchCheck");
 		_animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 
@@ -97,6 +99,21 @@ public partial class Player : Godot.CharacterBody3D
 			Mathf.Max(0.0f, 1.0f - linearDampingTimesDeltaSeconds));
 			
 		Velocity = velocity * linearVelocityMultiplier;
+
+		var centerViewport = GetViewport().GetWindow().Size / 2;
+		var spaceState = GetWorld3D().DirectSpaceState;
+		var rayHit = spaceState.IntersectRay(new PhysicsRayQueryParameters3D
+		{
+			From = _camera.ProjectRayOrigin(centerViewport),
+			To = _camera.ProjectRayNormal(centerViewport) * 1000,
+			CollisionMask = 2,
+			CollideWithBodies = true
+		});
+		if (rayHit.Count > 0)
+		{
+			_gunHolder.LookAt(rayHit["position"].AsVector3(), Vector3.Up);
+		}
+		
 		MoveAndSlide();
 	}
 
