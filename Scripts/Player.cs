@@ -4,7 +4,9 @@ namespace Galygun;
 
 public partial class Player : Godot.CharacterBody3D
 {
-	private const float Speed = 5.0f;
+	private const float WalkSpeed = 3.0f;
+	private const float RunSpeed = 6.0f;
+	private const float CrouchSpeed = 2.0f;
 	private const float JumpVelocity = 4.5f;
 	private const float CameraSensitivity = 0.5f;
 
@@ -25,24 +27,27 @@ public partial class Player : Godot.CharacterBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		var velocity = Velocity;
+		var crouching = Input.IsActionPressed("crouch");
+		var running = Input.IsActionPressed("run") && !crouching;
 
 		if (!IsOnFloor())
 			velocity.Y -= _gravity * (float)delta;
 
-		if (Input.IsActionJustPressed("jump") && IsOnFloor())
+		if (Input.IsActionJustPressed("jump") && IsOnFloor() && !crouching)
 			velocity.Y = JumpVelocity;
 
 		var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
 		var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero)
 		{
-			velocity.X = direction.X * Speed;
-			velocity.Z = direction.Z * Speed;
+			var speed = crouching ? CrouchSpeed : running ? RunSpeed : WalkSpeed;
+			velocity.X = direction.X * speed;
+			velocity.Z = direction.Z * speed;
 		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, WalkSpeed);
+			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, WalkSpeed);
 		}
 
 		var collisionCapsule = _collisionShape.Shape as CapsuleShape3D;
