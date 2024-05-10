@@ -15,7 +15,6 @@ public partial class Player : Godot.CharacterBody3D
 	private float _linearDamping = ProjectSettings.GetSetting("physics/3d/default_linear_damp").AsSingle();
 	private Camera3D _camera;
 	private Gun _gun;
-	// private CollisionShape3D _collisionShape;
 	private ShapeCast3D _uncrouchCheck;
 	private AnimationPlayer _animationPlayer;
 
@@ -25,7 +24,6 @@ public partial class Player : Godot.CharacterBody3D
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
 		_gun = FindChild("Gun") as Gun;
-		// _collisionShape = GetNode<CollisionShape3D>("CollisionShape3D");
 		_uncrouchCheck = GetNode<ShapeCast3D>("UncrouchCheck");
 		_animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
 
@@ -38,8 +36,6 @@ public partial class Player : Godot.CharacterBody3D
 		var crouch = Input.IsActionPressed("crouch");
 		var running = Input.IsActionPressed("run") && !_crouching;
 
-		// var collisionCapsule = _collisionShape.Shape as CapsuleShape3D;
-		// collisionCapsule!.Height = Input.IsActionPressed("crouch") ? 1.2f : 2.0f;
 		if (crouch != _crouching)
 		{
 			if (crouch)
