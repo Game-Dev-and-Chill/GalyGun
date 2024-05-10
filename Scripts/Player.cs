@@ -4,6 +4,7 @@ namespace Galygun;
 
 public partial class Player : Godot.CharacterBody3D
 {
+	private const float AirControlSpeed = 1.0f;
 	private const float WalkSpeed = 3.0f;
 	private const float RunSpeed = 6.0f;
 	private const float CrouchSpeed = 2.0f;
@@ -11,6 +12,7 @@ public partial class Player : Godot.CharacterBody3D
 	private const float CameraSensitivity = 0.5f;
 
 	private float _gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
+	private float _linearDamping = ProjectSettings.GetSetting("physics/3d/default_linear_damp").AsSingle();
 	private Camera3D _camera;
 	private Gun _gun;
 	private CollisionShape3D _collisionShape;
@@ -36,24 +38,46 @@ public partial class Player : Godot.CharacterBody3D
 		if (Input.IsActionJustPressed("jump") && IsOnFloor() && !crouching)
 			velocity.Y = JumpVelocity;
 
-		var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
-		var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-		if (direction != Vector3.Zero)
+		if (IsOnFloor())
 		{
-			var speed = crouching ? CrouchSpeed : running ? RunSpeed : WalkSpeed;
-			velocity.X = direction.X * speed;
-			velocity.Z = direction.Z * speed;
+			var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+			var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+			if (direction != Vector3.Zero)
+			{
+				var speed = crouching ? CrouchSpeed : running ? RunSpeed : WalkSpeed;
+				velocity.X = direction.X * speed;
+				velocity.Z = direction.Z * speed;
+			}
+			else
+			{
+				velocity.X = Mathf.MoveToward(Velocity.X, 0, WalkSpeed);
+				velocity.Z = Mathf.MoveToward(Velocity.Z, 0, WalkSpeed);
+			}
 		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, WalkSpeed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, WalkSpeed);
+			var inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+			var direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+			if (direction != Vector3.Zero)
+			{
+				//TODO: Currently accepts new direction. Should instead move toward the direction to provide a more limited air control.
+				var momentum = new Vector3(velocity.X, 0, velocity.Z).Length();
+				direction *= Mathf.Max(momentum, AirControlSpeed);
+				velocity.X = direction.X;
+				velocity.Z = direction.Z;
+			}
 		}
 
 		var collisionCapsule = _collisionShape.Shape as CapsuleShape3D;
-		collisionCapsule!.Height = Input.IsActionPressed("crouch") ? 1.2f : 2.0f; 
+		collisionCapsule!.Height = Input.IsActionPressed("crouch") ? 1.2f : 2.0f;
 
-		Velocity = velocity;
+		var linearDampingTimesDeltaSeconds = _linearDamping * (float)delta;
+		var linearVelocityMultiplier = new Vector3(
+			Mathf.Max(0.0f, 1.0f - linearDampingTimesDeltaSeconds),
+			Mathf.Max(0.0f, 1.0f - linearDampingTimesDeltaSeconds),
+			Mathf.Max(0.0f, 1.0f - linearDampingTimesDeltaSeconds));
+			
+		Velocity = velocity * linearVelocityMultiplier;
 		MoveAndSlide();
 	}
 

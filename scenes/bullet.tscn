@@ -8,6 +8,7 @@ height = 0.063
 radius = 0.032
 
 [node name="Bullet" type="RigidBody3D"]
+collision_layer = 2
 continuous_cd = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
